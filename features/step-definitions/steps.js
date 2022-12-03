@@ -1,9 +1,9 @@
 const { Given, When, Then } = require('@wdio/cucumber-framework')
 
-Given('I am on the main page', async () => {
-	await browser.url(`https://www.newegg.com/`)
+Given('I am on the {word} main page', async page => {
+	await browser.url(`https://www.${page}.com/`)
 	await browser.refresh()
-	await expect(browser).toHaveUrl(`https://www.newegg.com/`)
+	await expect(browser).toHaveUrl(`https://www.${page}.com/`)
 })
 
 When('I type Windows in the search bar', async () => {
@@ -12,8 +12,8 @@ When('I type Windows in the search bar', async () => {
 })
 
 Then('At least one item appears', async () => {
-	const item = await $('.item-cell')
-	await expect(item).toExist()
+	const item = await $('div[class="item-cell"]')
+	await expect(item).toBeDisplayed()
 })
 
 When ("I click on the {string} Tab", async deal => {
@@ -26,6 +26,9 @@ When('I click on the Internet shop logo', async () => {
 	await $('.header2021-logo-img').click()
 })
 
-Then('I should see main page', async () => {
-	await expect(browser).toHaveUrl('https://www.newegg.com/')
+Then('I should see {word} main page', async page => {
+	await expect(browser).toHaveUrl(`https://www.${page}.com/`)
+	await browser.deleteCookies()
+	const cookies = await browser.getCookies()
+	await expect(cookies).toEqual([])
 })
